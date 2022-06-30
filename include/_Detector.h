@@ -3,7 +3,13 @@
 #ifndef _DETECTOR_H
 #define _DETECTOR_H
 
-#include <opencv2/core/core.hpp>
+#include <opencv2/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+
+
+ // Include CvBridge, Image Transport, Image msg
+#include <image_transport/image_transport.h>
+#include <cv_bridge/cv_bridge.h>
 #include <memory>
 #include <queue>
 #include <cmath>
