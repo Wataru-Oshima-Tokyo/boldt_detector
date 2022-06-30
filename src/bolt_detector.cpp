@@ -216,7 +216,7 @@ int main( int argc, char** argv )
        
 
       if(!cc.src.empty()){
-         positions = dtc.detect(std::make_shared<cv::Mat>(cc.src));
+         cc.positions = dtc.detect(std::make_shared<cv::Mat>(cc.src));
             if(cc.getRun()){
                 for(auto position: positions){
                     // printf("x: %d, y: %d\n", position.x, position.y);
