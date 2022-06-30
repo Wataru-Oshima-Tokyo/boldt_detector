@@ -72,8 +72,9 @@ class CAMERA_CV{
     const int max_lowThreshold = 100;
     const std::string window_name = "Edge Map";
     std::vector<Point2i> positions;
-private:
     bool RUN = true;
+private:
+    
     bool start_call = true;
     bool stop_call = false;
     const int ratio = 3;
