@@ -97,7 +97,7 @@ void CAMERA_CV::Coordinate_Publisher(int x, int y){
     //  Mat* _depth = &depth;
      std::string temp="L";
      double z=0.0;
-     z = cc->depth.at<uint16_t>((uint16_t)y,(uint16_t)x);
+     z = depth.at<uint16_t>((uint16_t)y,(uint16_t)x);
     if(!temp.empty()){
        if(z>0 && z <1200){
           coordinate.t = temp;
@@ -193,8 +193,8 @@ void mouseEvent(int event, int x, int y, int flags, void* userdata)
           coordinate.z = 0;
           cc->pub.publish(coordinate);
        }
-     }
 }
+
 
 
 int main( int argc, char** argv )

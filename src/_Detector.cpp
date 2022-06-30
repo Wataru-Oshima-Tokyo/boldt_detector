@@ -81,7 +81,7 @@ std::shared_ptr<Mat> _DETECTOR::getImageRoiInGrayScale(std::shared_ptr<Mat> img)
 	cvtColor(temp(roi), gray, COLOR_BGR2GRAY);
 //    cv::imshow("roi", gray);
 //    cv::waitKey(1000);
-    DestroyWindow("roiPrompt");
+    destroyWindow("roiPrompt");
 	return std::make_shared<Mat>(gray);
 	//return std::make_shared<Mat>(temp(roi));
 }
