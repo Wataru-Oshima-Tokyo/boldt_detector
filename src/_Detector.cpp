@@ -59,23 +59,24 @@ _DETECTOR::_DETECTOR()
 _DETECTOR::~_DETECTOR(){
 }
 
-std::shared_ptr<Mat> _DETECTOR::getImageRoiInGreyScale(std::shared_ptr<Mat> img) {
+std::shared_ptr<Mat> _DETECTOR::getImageRoiInGrayScale(std::shared_ptr<Mat> img) {
 	auto temp = *img.get();
-	if (roi.size() == Size(0, 0))
+	while(!roi_captured)
 	{
 		namedWindow("roiPrompt", 1);
         setMouseCallback("roiPrompt", mouse_click, 0);
 		imshow("roiPrompt", *img.get());
-		waitKey(0);
-		if (!roi_captured)
-		{
-			//Wait here till user select the desire ROI
-			waitKey(0);
-		}
+		waitKey(3);
+		// if (!)
+		// {
+		// 	//Wait here till user select the desire ROI
+		// 	waitKey(0);
+		// }
 		//resize(frame, frame, Size(0, 0), 0.7, 0.7); //significantly improves processing time
-		roi = Rect(pt1, pt2);
+		
 		
 	}
+    roi = Rect(pt1, pt2);
 	Mat gray(roi.size(), CV_8UC3, Scalar(0, 0, 0));
 	cvtColor(temp(roi), gray, COLOR_BGR2GRAY);
 //    cv::imshow("roi", gray);
@@ -168,7 +169,7 @@ std::vector<Point2i> _DETECTOR::detectBestBolts(std::shared_ptr<Mat> img) {
 
 std::vector<cv::Point2i> _DETECTOR::detect(std::shared_ptr<cv::Mat> img)
 {
-	auto roiGrey = getImageRoiInGreyScale(img);
+	auto roiGrey = getImageRoiInGrayScale(img);
 	return detectBestBolts(roiGrey);
 }
 
