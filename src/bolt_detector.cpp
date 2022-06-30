@@ -264,8 +264,8 @@ int main( int argc, char** argv )
     //   }
       if(!cc.src.empty()){
         std::vector<Point2i> positions = dtc.detect(std::make_shared<cv::Mat>(cc.src));
-        for(auto position: postions){
-            printf("x: %d, y: %d", postion.x, position.y);
+        for(auto position: positions){
+            printf("x: %d, y: %d", position.x, position.y);
         }
         setMouseCallback("src", mouseEvent, &cc);
         clock_gettime(CLOCK_MONOTONIC, &stop); fstop=(double)stop.tv_sec + ((double)stop.tv_nsec/1000000000.0);
