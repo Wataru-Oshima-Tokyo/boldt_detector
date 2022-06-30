@@ -36,6 +36,7 @@ void mouse_click(int event, int x, int y, int flags, void* param)
 			pt2.y = y;
 
 			roi_captured = true;
+            destroyAllWindows();
 		}
 		else
 		{
@@ -82,7 +83,7 @@ std::shared_ptr<Mat> _DETECTOR::getImageRoiInGrayScale(std::shared_ptr<Mat> img)
 	cvtColor(temp(roi), gray, COLOR_BGR2GRAY);
 //    cv::imshow("roi", gray);
 //    cv::waitKey(1000);
-    // destroyAllWindows();
+    // 
 	return std::make_shared<Mat>(gray);
 	//return std::make_shared<Mat>(temp(roi));
 }
