@@ -136,7 +136,7 @@ void CAMERA_CV::Coordinate_Publisher(int x, int y){
 }
 
 bool CAMERA_CV::mg400_work_callback(const std_msgs::Bool& msg){
-    mg400_working = msg.data();
+    mg400_working = msg.data;
 }
 
 void CAMERA_CV::depth_callback(const sensor_msgs::ImageConstPtr& msg){
@@ -236,7 +236,7 @@ int main( int argc, char** argv )
    
    cc.image_sub = cc.nh.subscribe(cc.IMAGE_TOPIC, 1000, &CAMERA_CV::image_callback, &cc);
    cc.depth_sub = cc.nh.subscribe(cc.DEPTH_TOPIC, 1000, &CAMERA_CV::depth_callback, &cc);
-   cc.mg400_dsth = cc.nh.subscribe(cc.MG400_TOPIC,1000, &CAMERA_CV::mg400_work_callback, &cc)
+   cc.mg400_dsth = cc.nh.subscribe(cc.MG400_TOPIC,1000, &CAMERA_CV::mg400_work_callback, &cc);
    cc.detection_start = cc.nh.advertiseService(cc.DETECTION_START_SRV, &CAMERA_CV::detection_start_service, &cc);
    cc.detection_stop = cc.nh.advertiseService(cc.DETECTION_STOP_SRV, &CAMERA_CV::detection_stop_service, &cc);
    cc.pub = cc.nh.advertise<camera_pkg_msgs::Coordinate>(cc.PUBLISH_TOPIC, 1000);
@@ -244,10 +244,10 @@ int main( int argc, char** argv )
    while(ros::ok()){
       if(!cc.src.empty()){
          cc.positions = dtc.detect(std::make_shared<cv::Mat>(cc.src));
-         cv::circle(cc.src, cv::Point(position.x,position.y), 4, cv::Scalar(157, 99, 83));
             if(cc.getRun()){
                 for(auto position: cc.positions){
                     // printf("x: %d, y: %d\n", position.x, position.y);
+                    cv::circle(cc.src, cv::Point(position.x,position.y), 4, cv::Scalar(157, 99, 83));
                     cc.Coordinate_Publisher(position.x, position.y);
                 }   
             }
