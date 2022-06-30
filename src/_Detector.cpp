@@ -7,6 +7,46 @@ bool roi_captured = false;
 Point pt1, pt2;
 
 
+void mouse_click(int event, int x, int y, int flags, void* param)
+{
+	switch (event)
+	{
+	case EVENT_LBUTTONDOWN:
+	{
+		std::cout << "Mouse Pressed" << std::endl;
+
+		if (!roi_captured)
+		{
+			pt1.x = x;
+			pt1.y = y;
+		}
+		else
+		{
+			std::cout << "ROI Already Acquired" << std::endl;
+		}
+		break;
+	}
+	case EVENT_LBUTTONUP:
+	{
+		if (!roi_captured)
+		{
+			std::cout << "Mouse LBUTTON Released" << std::endl;
+
+			pt2.x = x;
+			pt2.y = y;
+
+			roi_captured = true;
+		}
+		else
+		{
+			std::cout << "ROI Already Acquired" << std::endl;
+		}
+		break;
+	}
+
+	}
+}
+
 _DETECTOR::_DETECTOR()
 	: roi(),
 	optimalThreshold(0)
@@ -24,8 +64,9 @@ std::shared_ptr<Mat> _DETECTOR::getImageRoiInGreyScale(std::shared_ptr<Mat> img)
 	if (roi.size() == Size(0, 0))
 	{
 		namedWindow("roiPrompt", 1);
+        setMouseCallback("roiPrompt", mouse_click, 0);
 		imshow("roiPrompt", *img.get());
-		waitKey(3);
+		waitKey(0);
 		if (!roi_captured)
 		{
 			//Wait here till user select the desire ROI
