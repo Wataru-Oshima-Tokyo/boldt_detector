@@ -139,7 +139,7 @@ std::vector<Point2i> Detector::detectBestBolts(std::shared_ptr<Mat> img) {
 
     std::vector<int> idVect;
     cv::dnn::NMSBoxes(rects, nmsWeights, 0.2, 0, idVect);
-    std::cout << rects.size() - idVect.size() << std::endl;
+    // std::cout << rects.size() - idVect.size() << std::endl;
     FixedQueue<Point> likeliestGrabPositions(10);
     for (int id : idVect) {
         RotatedRect rect = rects[id];

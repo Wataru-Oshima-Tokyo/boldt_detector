@@ -123,6 +123,7 @@ void CAMERA_CV::Coordinate_Publisher(int x, int y){
           coordinate.y = y;
           coordinate.z = z;
           pub.publish(coordinate);
+          RUN = false;
        }else{
          cout << "z value is not valid please try again." << endl;
        }
