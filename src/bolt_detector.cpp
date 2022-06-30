@@ -247,7 +247,7 @@ int main( int argc, char** argv )
         clock_gettime(CLOCK_MONOTONIC, &stop); fstop=(double)stop.tv_sec + ((double)stop.tv_nsec/1000000000.0);
         std::string fps= "FPS: " + std::to_string(1/(fstop-fstart));
         std::string mode="";
-        std::stinrg cmd_exp="L:start/stop R: xy_calibration M: z_calibration";
+        std::string cmd_exp="L:start/stop R: xy_calibration M: z_calibration";
         if(cc.cmd =="L"){
             if(cc.RUN)
                 mode ="Executing";
