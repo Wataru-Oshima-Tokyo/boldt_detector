@@ -71,3 +71,53 @@ std::vector<std::vector<Point>> _DETECTOR::detectBolts(std::shared_ptr<Mat> roi,
 //    waitKey(0);
 	return contours;
 }
+
+std::vector<Point2i> Detector::detectBestBolts(std::shared_ptr<Mat> img) {
+	std::vector<std::vector<Point> > contours = detectBolts(img, optimalThreshold);
+    std::vector<float> nmsWeights;
+    std::vector<RotatedRect> rects;
+	int i = 0;
+	for (auto contour : contours) {
+		RotatedRect rect = minAreaRect(contour);
+		float height = rect.size.height;
+		float width = rect.size.width;
+		float aspectRatio = std::min(height / width, width / height);
+		int contourArea = cv::contourArea(contour);
+        Mat mask(img->size(),CV_8UC1);
+        mask = 0;
+        cv::drawContours(mask, contours, i, Scalar(255),-1);
+        auto mean = cv::mean(*img, mask);
+        if (aspectRatio > 0 && contourArea > 0 && mean[0] >= 100) {
+            //float weight = aspectRatio + 1000 / (contourArea);
+//            float weight = aspectRatio + 255 / mean[0] + 100 / (contourArea);
+            float weight = aspectRatio + 255 / mean[0] + 1 / std::max(height, width);
+            nmsWeights.push_back(1 / weight);
+            rects.push_back(rect);
+		}
+		i++;
+    }
+
+    std::vector<int> idVect;
+    cv::dnn::NMSBoxes(rects, nmsWeights, 0.2, 0, idVect);
+    std::cout << rects.size() - idVect.size() << std::endl;
+    FixedQueue<Point> likeliestGrabPositions(10);
+    for (int id : idVect) {
+        RotatedRect rect = rects[id];
+        float weight = 1 / nmsWeights[id];
+        Point center = rect.center;
+        center.x += roi.x;
+        center.y += roi.y;
+        likeliestGrabPositions.push(std::pair<Point, float>(center, weight));
+    }
+    auto bestPositions = likeliestGrabPositions.getContentVectorAndEmptyQueue();
+    return bestPositions;
+
+//	auto bestContours = likeliestContours.getContentVectorAndEmptyQueue();
+//	std::vector<Point2f> centroids;
+//	for (auto contour : bestContours) {
+//		auto mu = moments(contour, false);
+//		centroids.push_back(Point2f(mu.m10 / mu.m00 + roi.x, mu.m01 / mu.m00 + roi.y));
+//	}
+//	destroyAllWindows();
+//	return centroids;
+}
