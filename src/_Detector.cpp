@@ -2,10 +2,10 @@
 
 _DETECTOR::_DETECTOR(){
     ros::NodeHandle nh;
-    ros::NodeHnadle private_nh("~");
+    ros::NodeHandle private_nh("~");
 
 }
 
 _DETECTOR::~_DETECTOR(){
-    
+
 }
