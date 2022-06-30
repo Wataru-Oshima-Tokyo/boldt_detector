@@ -55,8 +55,8 @@ class CAMERA_CV{
     virtual void image_callback(const sensor_msgs::ImageConstPtr&);
     virtual void depth_callback(const sensor_msgs::ImageConstPtr&);
     // Topics
-    const std::string IMAGE_TOPIC;
-    const std::string DEPTH_TOPIC;
+    std::string IMAGE_TOPIC;
+    std::string DEPTH_TOPIC;
     // const std::string DEPTH_TOPIC = "/camera/depth/color/image_raw";
     const std::string PUBLISH_TOPIC = "/camera_pkg/coordinate";
     CAMERA_CV();
@@ -84,17 +84,6 @@ CAMERA_CV::CAMERA_CV(){
 CAMERA_CV::~CAMERA_CV(){};
 
 bool CAMERA_CV::getRun(){
-  std_srvs::Empty _emp;
-  if(RUN && start_call){
-    calibration_start.call(_emp);
-    start_call = false;
-    stop_call = true;
-  }else if(!RUN && stop_call) {
-    calibration_stop.call(_emp);
-    start_call = true;
-    stop_call = false;
-  }
-    
   return RUN;
 }
 
