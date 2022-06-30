@@ -72,7 +72,7 @@ std::vector<std::vector<Point>> _DETECTOR::detectBolts(std::shared_ptr<Mat> roi,
 	return contours;
 }
 
-std::vector<Point2i> Detector::detectBestBolts(std::shared_ptr<Mat> img) {
+std::vector<Point2i> _DETECTOR::detectBestBolts(std::shared_ptr<Mat> img) {
 	std::vector<std::vector<Point> > contours = detectBolts(img, optimalThreshold);
     std::vector<float> nmsWeights;
     std::vector<RotatedRect> rects;
