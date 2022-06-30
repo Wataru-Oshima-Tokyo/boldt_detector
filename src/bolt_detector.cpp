@@ -247,7 +247,7 @@ int main( int argc, char** argv )
 
    ros::init(argc, argv, "work_with_camera_start");
    CAMERA_CV cc;
-   _Detector dtc;
+   _DETECTOR dtc;
    // Initialize the ROS Node "roscpp_example"
    ros::Rate loop_rate(20);
    
