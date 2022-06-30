@@ -66,7 +66,7 @@ std::shared_ptr<Mat> _DETECTOR::getImageRoiInGrayScale(std::shared_ptr<Mat> img)
 		namedWindow("roiPrompt", 1);
         setMouseCallback("roiPrompt", mouse_click, 0);
 		imshow("roiPrompt", *img.get());
-		waitKey(0);
+		waitKey(3);
 		// if (!)
 		// {
 		// 	//Wait here till user select the desire ROI
@@ -81,7 +81,7 @@ std::shared_ptr<Mat> _DETECTOR::getImageRoiInGrayScale(std::shared_ptr<Mat> img)
 	cvtColor(temp(roi), gray, COLOR_BGR2GRAY);
 //    cv::imshow("roi", gray);
 //    cv::waitKey(1000);
-    // destroyWindow("roiPrompt");
+    destroyWindow("roiPrompt");
 	return std::make_shared<Mat>(gray);
 	//return std::make_shared<Mat>(temp(roi));
 }
