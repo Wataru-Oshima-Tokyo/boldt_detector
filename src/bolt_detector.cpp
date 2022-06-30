@@ -225,8 +225,8 @@ int main( int argc, char** argv )
    
    cc.image_sub = cc.nh.subscribe(cc.IMAGE_TOPIC, 1000, &CAMERA_CV::image_callback, &cc);
    cc.depth_sub = cc.nh.subscribe(cc.DEPTH_TOPIC, 1000, &CAMERA_CV::depth_callback, &cc);
-   cc.detection_start = cc.advertiseService(cc.DETECTION_START_SRV, &CAMERA_CV::detection_start_service. &cc);
-   cc.detection_stop = cc.advertiseService(cc.DETECTION_STOP_SRV, &CAMERA_CV::detection_stop_service. &cc);
+   cc.detection_start = cc.advertiseService(cc.DETECTION_START_SRV, &CAMERA_CV::detection_start_service, &cc);
+   cc.detection_stop = cc.advertiseService(cc.DETECTION_STOP_SRV, &CAMERA_CV::detection_stop_service, &cc);
    cc.pub = cc.nh.advertise<camera_pkg_msgs::Coordinate>(cc.PUBLISH_TOPIC, 1000);
    std_srvs::Empty _emp;
    while(ros::ok()){
