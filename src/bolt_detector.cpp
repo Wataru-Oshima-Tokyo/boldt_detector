@@ -49,6 +49,7 @@ class CAMERA_CV{
     void CannyThreshold(int, void*);
     void MaskThreshold(int, void*);
     void DrawCircle(int, void*);
+    void Coordinate_Publisher(int x, int y);
     void mouseEvent(int event, int x, int y, int flags, void* userdata);
     camera_pkg_msgs::Coordinate MaskThreshold(int, int);
     // Mat getDepth();
@@ -58,6 +59,7 @@ class CAMERA_CV{
     // Topics
     std::string IMAGE_TOPIC;
     std::string DEPTH_TOPIC;
+    std::string cmd = "L";
     // const std::string DEPTH_TOPIC = "/camera/depth/color/image_raw";
     const std::string PUBLISH_TOPIC = "/camera_pkg/coordinate";
     CAMERA_CV();
@@ -65,6 +67,7 @@ class CAMERA_CV{
     bool getRun(); 
     const int max_lowThreshold = 100;
     const std::string window_name = "Edge Map";
+    std::vector<Point2i> positions;
 private:
     bool RUN = false;
     bool start_call = true;
@@ -89,60 +92,26 @@ bool CAMERA_CV::getRun(){
 }
 
 
+void CAMERA_CV::Coordinate_Publisher(int x, int y){
+    camera_pkg_msgs::Coordinate coordinate;
+    //  Mat* _depth = &depth;
+     std::string temp="L";
+     double z=0.0;
+     z = cc->depth.at<uint16_t>((uint16_t)y,(uint16_t)x);
+    if(!temp.empty()){
+       if(z>0 && z <1200){
+          coordinate.t = temp;
+          coordinate.x = x;
+          coordinate.y = y;
+          coordinate.z = z;
+          cc->pub.publish(coordinate);
+       }else{
+         cout << "z value is not valid please try again." << endl;
+       }
 
-
-void CAMERA_CV::DrawCircle(int, void*){
-  int x = src.cols, y = src.rows;
-  vector<int> x_array = {x/2-70, x/2, x/2+70, x/2+140};
-  vector<int> y_array = {y/2-140, y/2-70, y/2, y/2+70};
-  //draw circle 9;
-  //top
-  rep(i,0,x_array.size()){
-    rep(j,0,y_array.size()){
-      int _radius =13;
-      int _saturation1 = 153;
-      int _saturation2 =0;
-      if(j%2==0 && i%2==0){ _radius =20;_saturation1 = 100; _saturation2 =100;} 
-      else if(j%2==0) {_radius = 17; _saturation1 = 0; _saturation2 =150;}
-      else if(i%2==0) {_radius = 25; _saturation1 = 200; _saturation2 =10;}
-      // cv::circle(src_hsv, cv::Point(x_array[i],y_array[j]), 15, cv::Scalar(153, 0, 255), 5);
-      cv::circle(src, cv::Point(x_array[i],y_array[j]), _radius, cv::Scalar(_saturation1, _saturation2, 255),5);
-    }
-  }
-
+     }
 }
 
-camera_pkg_msgs::Coordinate CAMERA_CV::MaskThreshold(int x, int y){
-  camera_pkg_msgs::Coordinate rvalue;
-  rvalue.t="e";
-  Vec3b &color = src_hsv.at<Vec3b>(Point(y,x));
-  // 			upper=  np.array([pixel[0] + 10, pixel[1] + 10, pixel[2] + 40])
-	// lower=  np.array([pixel[0] -10, pixel[1] -10, pixel[2] -40])
-  rep(i,0,3){
-    int val=10;
-    if (i==2){
-      val=40;
-    }
-    low_c[i] = color[i] -val;
-    high_c[i] = color[i] +val;
-  }
-
-   cv::inRange(src_hsv, cv::Scalar(low_c[0],low_c[1],low_c[2]), cv::Scalar(high_c[0],high_c[1],high_c[2]),mask);
-   
-   cv::Moments M = cv::moments(mask); // get the center of gravity
-   if (M.m00 >0){
-   			int cx = int(M.m10/M.m00); //the center of mass for x
-   			int cy = int(M.m01/M.m00); //the cneter of mass for y
-      
-      cv::circle(src, cv::Point(cx,cy), 5, cv::Scalar(0, 0, 255));
-      rvalue.t="f";
-      rvalue.x = cx;
-      rvalue.y = cy;
-      return rvalue;
-   }
-   return rvalue;
-
-}
 
 
 void CAMERA_CV::depth_callback(const sensor_msgs::ImageConstPtr& msg){
@@ -203,41 +172,27 @@ void mouseEvent(int event, int x, int y, int flags, void* userdata)
     //  _cc.pub = _cc.nh.advertise<std_msgs::String>(_cc.PUBLISH_TOPIC, 1000);
      camera_pkg_msgs::Coordinate coordinate;
     //  Mat* _depth = &depth;
-     std::string temp="";
-     double z=0.0;
-     z = cc->depth.at<uint16_t>((uint16_t)y,(uint16_t)x);
      
     //  cout << color[0] << " "<< color[1] << " " << color[2] <<endl; 
      if  ( event == EVENT_LBUTTONDOWN )
      {
-
-	  	cout << "Left button of the mouse is clicked - position (" << x << ", " << y << ", " << z << ")" << endl;
-		temp = "L";
-// 		z = cc->depth.at<u_int16_t>(x,y);
-// 	  }
-         
+		  cc->cmd = "L";
      }
      else if  ( event == EVENT_RBUTTONDOWN )
      {
-          cout << "Right button of the mouse is clicked - position (" << x << ", " << y << ", " << z << ")" << endl;
-          temp = "R";
+          cc->cmd = "R";
      }
      else if  ( event == EVENT_MBUTTONDOWN )
      {
-          cout << "Middle button of the mouse is clicked - position (" << x << ", " << y << ", " << z << ")" << endl;
-          temp = "M";
+          cc->cmd = "M";
      }
-     if(!temp.empty()){
-       if(z>0 && z <1200){
-          coordinate.t = temp;
-          coordinate.x = x;
-          coordinate.y = y;
-          coordinate.z = z;
+     if(cc->cmd != ""){
+          coordinate.t = cc->cmd;
+          coordinate.x = 0;
+          coordinate.y = 0;
+          coordinate.z = 0;
           cc->pub.publish(coordinate);
-       }else{
-         cout << "z value is not valid please try again." << endl;
        }
-
      }
 }
 
@@ -259,18 +214,27 @@ int main( int argc, char** argv )
       // cout << cc.getRun() << endl;
        
        
-    //   if(cc.getRun()){
-    //         cc.DrawCircle(0,0);
-    //   }
+
       if(!cc.src.empty()){
-        std::vector<Point2i> positions = dtc.detect(std::make_shared<cv::Mat>(cc.src));
-        for(auto position: positions){
-            printf("x: %d, y: %d\n", position.x, position.y);
-            cv::circle(cc.src, cv::Point(position.x,position.y), 4, cv::Scalar(157, 99, 83));
-        }
+         positions = dtc.detect(std::make_shared<cv::Mat>(cc.src));
+            if(cc.getRun()){
+                for(auto position: positions){
+                    // printf("x: %d, y: %d\n", position.x, position.y);
+                    cc.Coordinate_Publisher(position.x, position.y);
+                    cv::circle(cc.src, cv::Point(position.x,position.y), 4, cv::Scalar(157, 99, 83));
+                }   
+            }
         setMouseCallback("src", mouseEvent, &cc);
         clock_gettime(CLOCK_MONOTONIC, &stop); fstop=(double)stop.tv_sec + ((double)stop.tv_nsec/1000000000.0);
         std::string fps= "FPS: " + std::to_string(1/(fstop-fstart));
+        std::string mode="";
+        if(cc.cmd =="L"){
+            mode ="Operation";
+        }else if (cc.cmd == "R"){
+            mode ="xy_calibration";
+        }else if (cc.cmd == "M"){
+            mode ="z_calibration";
+        }
         putText(cc.src, //target image
           fps, //text
           Point(10, 30), //top-left position
@@ -278,7 +242,13 @@ int main( int argc, char** argv )
           1.0,
           Scalar(118, 185, 0), //font color
           2);
-      
+        putText(cc.src, //target image
+          mode, //text
+          Point(20, 30), //top-second-left position
+          FONT_HERSHEY_DUPLEX,
+          1.0,
+          Scalar(0, 0, 255), //font color
+          2);
         imshow( "src", cc.src);
         waitKey(3);
       }
