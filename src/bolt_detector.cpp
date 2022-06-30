@@ -12,6 +12,7 @@
  #include <sensor_msgs/image_encodings.h>
  #include "std_msgs/String.h"
  #include "std_srvs/Empty.h"
+ #include "std_msgs/Bool.h"
  #include <vector>
  #include <camera_pkg_msgs/Coordinate.h>
  #include "_Detector.h"
@@ -34,7 +35,7 @@ class CAMERA_CV{
     Mat src, src_gray, src_hsv, dst, detected_edges, mask;
     Mat depth;
     ros::Publisher pub;
-    ros::Subscriber image_sub, depth_sub;
+    ros::Subscriber image_sub, depth_sub, mg400_dsth;
     ros::NodeHandle nh;
     ros::ServiceServer detection_start, detection_stop;
     int lowThreshold;
@@ -58,9 +59,11 @@ class CAMERA_CV{
     virtual void depth_callback(const sensor_msgs::ImageConstPtr&);
     virtual bool detection_start_service(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res);
     virtual bool detection_stop_service(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res);
+    virtual bool mg400_work_callback(const std_msgs::Bool& msg);
     // Topics
     std::string IMAGE_TOPIC;
     std::string DEPTH_TOPIC;
+    const std::string MG400_TOPIC = "mg400/working";
     std::string cmd = "L";
     // const std::string DEPTH_TOPIC = "/camera/depth/color/image_raw";
     const std::string PUBLISH_TOPIC = "/camera_pkg/coordinate";
@@ -69,6 +72,7 @@ class CAMERA_CV{
     CAMERA_CV();
     ~CAMERA_CV();
     bool getRun(); 
+    bool mg400_working = false;
     const int max_lowThreshold = 100;
     const std::string window_name = "Edge Map";
     std::vector<Point2i> positions;
@@ -122,8 +126,8 @@ void CAMERA_CV::Coordinate_Publisher(int x, int y){
           coordinate.x = x;
           coordinate.y = y;
           coordinate.z = z;
+
           pub.publish(coordinate);
-          RUN = false;
        }else{
          cout << "z value is not valid please try again." << endl;
        }
@@ -131,7 +135,9 @@ void CAMERA_CV::Coordinate_Publisher(int x, int y){
      }
 }
 
-
+bool CAMERA_CV::mg400_work_callback(const std_msgs::Bool& msg){
+    mg400_working = msg.data();
+}
 
 void CAMERA_CV::depth_callback(const sensor_msgs::ImageConstPtr& msg){
     std_msgs::Header msg_header = msg->header;
@@ -230,6 +236,7 @@ int main( int argc, char** argv )
    
    cc.image_sub = cc.nh.subscribe(cc.IMAGE_TOPIC, 1000, &CAMERA_CV::image_callback, &cc);
    cc.depth_sub = cc.nh.subscribe(cc.DEPTH_TOPIC, 1000, &CAMERA_CV::depth_callback, &cc);
+   cc.mg400_dsth = cc.nh.subscribe(cc.MG400_TOPIC,1000, &CAMERA_CV::mg400_work_callback, &cc)
    cc.detection_start = cc.nh.advertiseService(cc.DETECTION_START_SRV, &CAMERA_CV::detection_start_service, &cc);
    cc.detection_stop = cc.nh.advertiseService(cc.DETECTION_STOP_SRV, &CAMERA_CV::detection_stop_service, &cc);
    cc.pub = cc.nh.advertise<camera_pkg_msgs::Coordinate>(cc.PUBLISH_TOPIC, 1000);
@@ -237,11 +244,11 @@ int main( int argc, char** argv )
    while(ros::ok()){
       if(!cc.src.empty()){
          cc.positions = dtc.detect(std::make_shared<cv::Mat>(cc.src));
+         cv::circle(cc.src, cv::Point(position.x,position.y), 4, cv::Scalar(157, 99, 83));
             if(cc.getRun()){
                 for(auto position: cc.positions){
                     // printf("x: %d, y: %d\n", position.x, position.y);
                     cc.Coordinate_Publisher(position.x, position.y);
-                    cv::circle(cc.src, cv::Point(position.x,position.y), 4, cv::Scalar(157, 99, 83));
                 }   
             }
         setMouseCallback("src", mouseEvent, &cc);
