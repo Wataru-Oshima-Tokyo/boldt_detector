@@ -20,9 +20,9 @@ std::shared_ptr<Mat> _DETECTOR::getImageRoiInGreyScale(std::shared_ptr<Mat> img)
 	auto temp = *img.get();
 	if (roi.size() == Size(0, 0))
 	{
-		// namedWindow("roiPrompt", 1);
-		cv::imshow("roiPrompt", *img.get());
-		waitKey(0);
+		namedWindow("roiPrompt", 1);
+		imshow("roiPrompt", *img.get());
+		waitKey(3);
 		if (!roi_captured)
 		{
 			//Wait here till user select the desire ROI
