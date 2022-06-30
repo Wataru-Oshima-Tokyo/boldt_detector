@@ -58,7 +58,7 @@ public:
     std::vector<cv::Point2i> detect(std::shared_ptr<cv::Mat> img);
 	void determineOptimalThreshold(std::shared_ptr<cv::Mat> roi);
 	Detector();
-
+    ~Detector();
 protected:
 	cv::Rect roi;
 	int optimalThreshold;

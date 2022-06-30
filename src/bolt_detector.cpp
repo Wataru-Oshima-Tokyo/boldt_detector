@@ -14,7 +14,7 @@
  #include "std_srvs/Empty.h"
  #include <vector>
  #include <camera_pkg_msgs/Coordinate.h>
- #include "Detector.h"
+ #include "_Detector.h"
  #include <map>
 
 // #include <camera_pkg/Camera_CV.h>
@@ -247,7 +247,7 @@ int main( int argc, char** argv )
 
    ros::init(argc, argv, "work_with_camera_start");
    CAMERA_CV cc;
-   Detector dtc;
+   _Detector dtc;
    // Initialize the ROS Node "roscpp_example"
    ros::Rate loop_rate(20);
    
