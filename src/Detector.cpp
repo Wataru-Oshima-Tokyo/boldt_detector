@@ -64,11 +64,11 @@ std::shared_ptr<Mat> Detector::getImageRoiInGreyScale(std::shared_ptr<Mat> img) 
 		namedWindow("roiPrompt", 1);
 		setMouseCallback("roiPrompt", mouse_click, 0);
 		imshow("roiPrompt", *img.get());
-		waitKey(0);
+		waitKey(3);
 		if (!roi_captured)
 		{
 			//Wait here till user select the desire ROI
-			waitKey(0);
+			waitKey(3);
 		}
 		//resize(frame, frame, Size(0, 0), 0.7, 0.7); //significantly improves processing time
 		roi = Rect(pt1, pt2);
