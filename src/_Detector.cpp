@@ -76,12 +76,13 @@ std::shared_ptr<Mat> _DETECTOR::getImageRoiInGrayScale(std::shared_ptr<Mat> img)
 		
 		
 	}
+    cv::rectangle(*img.get(), pt1, pt2, cv::Scalar(255,0,0), 5);
     roi = Rect(pt1, pt2);
 	Mat gray(roi.size(), CV_8UC3, Scalar(0, 0, 0));
 	cvtColor(temp(roi), gray, COLOR_BGR2GRAY);
 //    cv::imshow("roi", gray);
 //    cv::waitKey(1000);
-    destroyAllWindows();
+    // destroyAllWindows();
 	return std::make_shared<Mat>(gray);
 	//return std::make_shared<Mat>(temp(roi));
 }
