@@ -36,7 +36,7 @@ class CAMERA_CV{
     ros::Publisher pub;
     ros::Subscriber image_sub, depth_sub;
     ros::NodeHandle nh;
-    ros::ServiceServer imshow_start, imshow_stop;
+    ros::ServiceServer detection_start, detection_stop;
     int lowThreshold;
     // int low_c[3] = {17, 123, 121};
     // int high_c[3] ={37, 143, 201};
@@ -56,12 +56,16 @@ class CAMERA_CV{
     const std::string OPENCV_WINDOW = "Image window";
     virtual void image_callback(const sensor_msgs::ImageConstPtr&);
     virtual void depth_callback(const sensor_msgs::ImageConstPtr&);
+    virtual bool detection_start_service(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res);
+    virtual bool detection_stop_service(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res);
     // Topics
     std::string IMAGE_TOPIC;
     std::string DEPTH_TOPIC;
     std::string cmd = "L";
     // const std::string DEPTH_TOPIC = "/camera/depth/color/image_raw";
     const std::string PUBLISH_TOPIC = "/camera_pkg/coordinate";
+    const std::string DETECTION_START_SRV = "/detection/start";
+    const std::string DETECTION_STOP_SRV = "/detection/start";
     CAMERA_CV();
     ~CAMERA_CV();
     bool getRun(); 
@@ -91,6 +95,19 @@ bool CAMERA_CV::getRun(){
   return RUN;
 }
 
+
+ bool CAMERA_CV::detection_start_service(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res){
+  //  cout << "start calibration" << endl;
+   RUN = true;
+   return RUN;
+
+ }
+
+ bool CAMERA_CV::detection_stop_service(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res){
+  //  cout << "stop calibration" << endl;
+   RUN = false;
+   return RUN;
+ }
 
 void CAMERA_CV::Coordinate_Publisher(int x, int y){
     camera_pkg_msgs::Coordinate coordinate;
@@ -208,13 +225,11 @@ int main( int argc, char** argv )
    
    cc.image_sub = cc.nh.subscribe(cc.IMAGE_TOPIC, 1000, &CAMERA_CV::image_callback, &cc);
    cc.depth_sub = cc.nh.subscribe(cc.DEPTH_TOPIC, 1000, &CAMERA_CV::depth_callback, &cc);
+   cc.detection_start = cc.advertiseService(cc.DETECTION_START_SRV, &CAMERA_CV::detection_start_service. &cc);
+   cc.detection_stop = cc.advertiseService(cc.DETECTION_STOP_SRV, &CAMERA_CV::detection_stop_service. &cc);
    cc.pub = cc.nh.advertise<camera_pkg_msgs::Coordinate>(cc.PUBLISH_TOPIC, 1000);
    std_srvs::Empty _emp;
    while(ros::ok()){
-      // cout << cc.getRun() << endl;
-       
-       
-
       if(!cc.src.empty()){
          cc.positions = dtc.detect(std::make_shared<cv::Mat>(cc.src));
             if(cc.getRun()){
