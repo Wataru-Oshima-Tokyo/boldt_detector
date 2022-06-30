@@ -218,7 +218,7 @@ int main( int argc, char** argv )
       if(!cc.src.empty()){
          cc.positions = dtc.detect(std::make_shared<cv::Mat>(cc.src));
             if(cc.getRun()){
-                for(auto position: positions){
+                for(auto position: cc.positions){
                     // printf("x: %d, y: %d\n", position.x, position.y);
                     cc.Coordinate_Publisher(position.x, position.y);
                     cv::circle(cc.src, cv::Point(position.x,position.y), 4, cv::Scalar(157, 99, 83));
