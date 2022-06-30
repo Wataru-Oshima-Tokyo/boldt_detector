@@ -21,7 +21,7 @@ std::shared_ptr<Mat> _DETECTOR::getImageRoiInGreyScale(std::shared_ptr<Mat> img)
 	if (roi.size() == Size(0, 0))
 	{
 		// namedWindow("roiPrompt", 1);
-		imshow("roiPrompt", *img.get());
+		cv::imshow("roiPrompt", *img.get());
 		waitKey(0);
 		if (!roi_captured)
 		{
