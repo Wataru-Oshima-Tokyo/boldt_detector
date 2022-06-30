@@ -63,7 +63,7 @@ class CAMERA_CV{
     // Topics
     std::string IMAGE_TOPIC;
     std::string DEPTH_TOPIC;
-    const std::string MG400_TOPIC = "mg400/working";
+    const std::string MG400_TOPIC = "/mg400/working";
     std::string cmd = "L";
     // const std::string DEPTH_TOPIC = "/camera/depth/color/image_raw";
     const std::string PUBLISH_TOPIC = "/camera_pkg/coordinate";
@@ -274,8 +274,8 @@ int main( int argc, char** argv )
           1.0,
           Scalar(118, 185, 0), //font color
           2);
-        putText(cc.src, mode, Point(10, 60), FONT_HERSHEY_DUPLEX,1.0,Scalar(0, 0, 255), 2);
-        putText(cc.src, cmd_exp, Point(10, 90), FONT_HERSHEY_DUPLEX, 1.0, Scalar(255,0, 0), 2);
+        putText(cc.src, mode, Point(10, 65), FONT_HERSHEY_DUPLEX,1.0,Scalar(0, 0, 255), 2);
+        putText(cc.src, cmd_exp, Point(10, 95), FONT_HERSHEY_DUPLEX, 1.0, Scalar(255,0, 0), 2);
         imshow( "src", cc.src);
         waitKey(3);
       }
