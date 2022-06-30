@@ -104,7 +104,7 @@ void CAMERA_CV::Coordinate_Publisher(int x, int y){
           coordinate.x = x;
           coordinate.y = y;
           coordinate.z = z;
-          cc->pub.publish(coordinate);
+          pub.publish(coordinate);
        }else{
          cout << "z value is not valid please try again." << endl;
        }
