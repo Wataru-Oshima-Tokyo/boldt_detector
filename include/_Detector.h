@@ -14,7 +14,7 @@ class _DETECTOR{
     public:
         _DETECTOR();
         ~_DETECTOR();
-}
+};
 
 
 #endif //
