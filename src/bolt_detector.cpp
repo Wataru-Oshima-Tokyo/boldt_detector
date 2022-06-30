@@ -72,7 +72,7 @@ class CAMERA_CV{
     const int max_lowThreshold = 100;
     const std::string window_name = "Edge Map";
     std::vector<Point2i> positions;
-    bool RUN = true;
+    bool RUN = false;
 private:
     
     bool start_call = true;
@@ -195,7 +195,7 @@ void mouseEvent(int event, int x, int y, int flags, void* userdata)
      if  ( event == EVENT_LBUTTONDOWN )
      {
 		  cc->cmd = "L";
-          cc->RUN =true;
+          cc->RUN =!cc->RUN;
      }
      else if  ( event == EVENT_RBUTTONDOWN )
      {
@@ -247,8 +247,12 @@ int main( int argc, char** argv )
         clock_gettime(CLOCK_MONOTONIC, &stop); fstop=(double)stop.tv_sec + ((double)stop.tv_nsec/1000000000.0);
         std::string fps= "FPS: " + std::to_string(1/(fstop-fstart));
         std::string mode="";
+        std::stinrg cmd_exp="L:start/stop R: xy_calibration M: z_calibration";
         if(cc.cmd =="L"){
-            mode ="Operation";
+            if(cc.RUN)
+                mode ="Executing";
+            else 
+                mode ="Pausing...";
         }else if (cc.cmd == "R"){
             mode ="xy_calibration";
         }else if (cc.cmd == "M"){
@@ -261,13 +265,8 @@ int main( int argc, char** argv )
           1.0,
           Scalar(118, 185, 0), //font color
           2);
-        putText(cc.src, //target image
-          mode, //text
-          Point(10, 80), //top-second-left position
-          FONT_HERSHEY_DUPLEX,
-          1.0,
-          Scalar(0, 0, 255), //font color
-          2);
+        putText(cc.src, mode, Point(10, 80), FONT_HERSHEY_DUPLEX,1.0,Scalar(0, 0, 255), 2);
+        putText(cc.src, cmd_exp, Point(10, IMAGE_HIEHGT-50), FONT_HERSHEY_DUPLEX, 1.0, Scalar(255,0, 0), 2);
         imshow( "src", cc.src);
         waitKey(3);
       }
