@@ -64,8 +64,8 @@ class CAMERA_CV{
     std::string cmd = "L";
     // const std::string DEPTH_TOPIC = "/camera/depth/color/image_raw";
     const std::string PUBLISH_TOPIC = "/camera_pkg/coordinate";
-    const std::string DETECTION_START_SRV = "/detection/start";
-    const std::string DETECTION_STOP_SRV = "/detection/start";
+    const std::string DETECTION_START_SRV = "/bolt_detection/start";
+    const std::string DETECTION_STOP_SRV = "/bolt_detection/start";
     CAMERA_CV();
     ~CAMERA_CV();
     bool getRun(); 
