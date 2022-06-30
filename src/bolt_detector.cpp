@@ -266,7 +266,7 @@ int main( int argc, char** argv )
         std::vector<Point2i> positions = dtc.detect(std::make_shared<cv::Mat>(cc.src));
         for(auto position: positions){
             printf("x: %d, y: %d\n", position.x, position.y);
-            cv::circle(cc.src, cv::Point(position.x,position.y), 2, cv::Scalar(0, 0, 255));
+            cv::circle(cc.src, cv::Point(position.x,position.y), 3, cv::Scalar(83, 99, 157));
         }
         setMouseCallback("src", mouseEvent, &cc);
         clock_gettime(CLOCK_MONOTONIC, &stop); fstop=(double)stop.tv_sec + ((double)stop.tv_nsec/1000000000.0);
