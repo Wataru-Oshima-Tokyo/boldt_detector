@@ -183,7 +183,7 @@ void Detector::determineOptimalThreshold(std::shared_ptr<Mat> roi)
 			leastVarianceFromOptimal = varianceFromOptimal;
 		}
 	}
-	std::cout << "optimal threshold: " << optimalThreshold << std::endl;
+	// std::cout << "optimal threshold: " << optimalThreshold << std::endl;
 }
 
 Detector::Detector() 
