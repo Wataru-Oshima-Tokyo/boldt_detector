@@ -2,6 +2,10 @@
 #include <opencv2/dnn.hpp>
 #include <iostream>
 
+using namespace cv;
+bool roi_captured = false;
+Point pt1, pt2;
+
 
 _DETECTOR::_DETECTOR(){
     ros::NodeHandle nh;
