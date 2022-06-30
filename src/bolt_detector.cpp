@@ -59,7 +59,7 @@ class CAMERA_CV{
     virtual void depth_callback(const sensor_msgs::ImageConstPtr&);
     virtual bool detection_start_service(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res);
     virtual bool detection_stop_service(std_srvs::Empty::Request& req, std_srvs::Empty::Response& res);
-    virtual bool mg400_work_callback(const std_msgs::Bool& msg);
+    virtual void mg400_work_callback(const std_msgs::Bool& msg);
     // Topics
     std::string IMAGE_TOPIC;
     std::string DEPTH_TOPIC;
@@ -135,7 +135,7 @@ void CAMERA_CV::Coordinate_Publisher(int x, int y){
      }
 }
 
-bool CAMERA_CV::mg400_work_callback(const std_msgs::Bool& msg){
+void CAMERA_CV::mg400_work_callback(const std_msgs::Bool& msg){
     mg400_working = msg.data;
 }
 
