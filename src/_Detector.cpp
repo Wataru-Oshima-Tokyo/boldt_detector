@@ -77,7 +77,12 @@ std::shared_ptr<Mat> _DETECTOR::getImageRoiInGrayScale(std::shared_ptr<Mat> img)
 		
 		
 	}
-    cv::rectangle(*img.get(), pt1, pt2, cv::Scalar(255,0,0), 5);
+    Point _pt1, _pt2;
+    _pt1.x = pt1.x +5;
+    _pt1.y = pt1.y +5;
+    _pt2.x = pt2.x +5;
+    _pt2.y = pt2.y +5;
+    cv::rectangle(*img.get(), _pt1, _pt2, cv::Scalar(255,0,0), 1);
     roi = Rect(pt1, pt2);
 	Mat gray(roi.size(), CV_8UC3, Scalar(0, 0, 0));
 	cvtColor(temp(roi), gray, COLOR_BGR2GRAY);
