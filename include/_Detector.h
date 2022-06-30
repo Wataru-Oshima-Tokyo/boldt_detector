@@ -12,6 +12,7 @@
 
 class _DETECTOR{
     public:
+    	std::shared_ptr<cv::Mat> getImageRoiInGreyScale(std::shared_ptr<cv::Mat> img);
     	std::vector<std::vector<cv::Point>> detectBolts(std::shared_ptr<cv::Mat> roi, int threshold);
         std::vector<cv::Point2i> detectBestBolts(std::shared_ptr<cv::Mat> img);
         std::vector<cv::Point2i> detect(std::shared_ptr<cv::Mat> img);
