@@ -248,7 +248,8 @@ int main( int argc, char** argv )
                 for(auto position: cc.positions){
                     // printf("x: %d, y: %d\n", position.x, position.y);
                     cv::circle(cc.src, cv::Point(position.x,position.y), 4, cv::Scalar(157, 99, 83));
-                    cc.Coordinate_Publisher(position.x, position.y);
+                    if(!cc.mg400_working)
+                        cc.Coordinate_Publisher(position.x, position.y);
                 }   
             }
         setMouseCallback("src", mouseEvent, &cc);
