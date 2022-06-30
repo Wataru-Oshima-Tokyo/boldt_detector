@@ -7,7 +7,10 @@ bool roi_captured = false;
 Point pt1, pt2;
 
 
-_DETECTOR::_DETECTOR(){
+_DETECTOR::_DETECTOR()
+	: roi(),
+	optimalThreshold(0)
+    {
     ros::NodeHandle nh;
     ros::NodeHandle private_nh("~");
 
@@ -120,4 +123,28 @@ std::vector<Point2i> _DETECTOR::detectBestBolts(std::shared_ptr<Mat> img) {
 //	}
 //	destroyAllWindows();
 //	return centroids;
+}
+
+std::vector<cv::Point2i> _DETECTOR::detect(std::shared_ptr<cv::Mat> img)
+{
+	auto roiGrey = getImageRoiInGreyScale(img);
+	return detectBestBolts(roiGrey);
+}
+
+void _DETECTOR::determineOptimalThreshold(std::shared_ptr<Mat> roi)
+{
+	int optimalNumberOfContours = 50;
+	int leastVarianceFromOptimal = 100;
+	int threshold = 50;
+	for (int i = 0; i < 7; i++) {
+		threshold += i * 10;
+		auto contours = detectBolts(roi, threshold);
+		int numContours = contours.size();
+		int varianceFromOptimal = abs(numContours - optimalNumberOfContours);
+		if (varianceFromOptimal < leastVarianceFromOptimal) {
+			optimalThreshold = threshold;
+			leastVarianceFromOptimal = varianceFromOptimal;
+		}
+	}
+	std::cout << "optimal threshold: " << optimalThreshold << std::endl;
 }
