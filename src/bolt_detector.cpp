@@ -14,6 +14,7 @@
  #include "std_srvs/Empty.h"
  #include <vector>
  #include <camera_pkg_msgs/Coordinate.h>
+ #include "Detector.h"
  #include <map>
 
 // #include <camera_pkg/Camera_CV.h>

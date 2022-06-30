@@ -151,7 +151,7 @@ include_directories(
 
 add_executable(${PROJECT_NAME}_node   
   src/bolt_detector.cpp
-  src/Detector.cpp
+  # src/Detector.cpp
   
   )
 
