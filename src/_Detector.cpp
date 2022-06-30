@@ -1,4 +1,7 @@
 #include "_Detector.h"
+#include <opencv2/dnn.hpp>
+#include <iostream>
+
 
 _DETECTOR::_DETECTOR(){
     ros::NodeHandle nh;

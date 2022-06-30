@@ -12,8 +12,15 @@
 
 class _DETECTOR{
     public:
+    	std::vector<std::vector<cv::Point>> detectBolts(std::shared_ptr<cv::Mat> roi, int threshold);
+        std::vector<cv::Point2i> detectBestBolts(std::shared_ptr<cv::Mat> img);
+        std::vector<cv::Point2i> detect(std::shared_ptr<cv::Mat> img);
+        void determineOptimalThreshold(std::shared_ptr<cv::Mat> roi);
         _DETECTOR();
         ~_DETECTOR();
+    protected:
+    	cv::Rect roi;
+	    int optimalThreshold;
 };
 
 
