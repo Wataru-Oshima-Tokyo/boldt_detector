@@ -263,7 +263,7 @@ int main( int argc, char** argv )
     //         cc.DrawCircle(0,0);
     //   }
       if(!cc.src.empty()){
-        dtc.detect(*cc.src);
+        dtc.detect(cc.src);
         setMouseCallback("src", mouseEvent, &cc);
         clock_gettime(CLOCK_MONOTONIC, &stop); fstop=(double)stop.tv_sec + ((double)stop.tv_nsec/1000000000.0);
         std::string fps= "FPS: " + std::to_string(1/(fstop-fstart));
