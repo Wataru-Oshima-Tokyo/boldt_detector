@@ -266,7 +266,7 @@ int main( int argc, char** argv )
           Scalar(118, 185, 0), //font color
           2);
         putText(cc.src, mode, Point(10, 80), FONT_HERSHEY_DUPLEX,1.0,Scalar(0, 0, 255), 2);
-        putText(cc.src, cmd_exp, Point(10, IMG_HIEHGT-50), FONT_HERSHEY_DUPLEX, 1.0, Scalar(255,0, 0), 2);
+        putText(cc.src, cmd_exp, Point(10, (IMG_HEIGHT-50)), FONT_HERSHEY_DUPLEX, 1.0, Scalar(255,0, 0), 2);
         imshow( "src", cc.src);
         waitKey(3);
       }
