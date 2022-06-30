@@ -73,7 +73,7 @@ class CAMERA_CV{
     const std::string window_name = "Edge Map";
     std::vector<Point2i> positions;
 private:
-    bool RUN = false;
+    bool RUN = true;
     bool start_call = true;
     bool stop_call = false;
     const int ratio = 3;
@@ -194,14 +194,17 @@ void mouseEvent(int event, int x, int y, int flags, void* userdata)
      if  ( event == EVENT_LBUTTONDOWN )
      {
 		  cc->cmd = "L";
+          cc->RUN =true;
      }
      else if  ( event == EVENT_RBUTTONDOWN )
      {
           cc->cmd = "R";
+          cc->RUN =false;
      }
      else if  ( event == EVENT_MBUTTONDOWN )
      {
           cc->cmd = "M";
+          cc->RUN =false;
      }
      if(cc->cmd != ""){
           coordinate.t = cc->cmd;
@@ -259,7 +262,7 @@ int main( int argc, char** argv )
           2);
         putText(cc.src, //target image
           mode, //text
-          Point(20, 30), //top-second-left position
+          Point(10, 80), //top-second-left position
           FONT_HERSHEY_DUPLEX,
           1.0,
           Scalar(0, 0, 255), //font color
