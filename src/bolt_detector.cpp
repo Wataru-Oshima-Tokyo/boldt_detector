@@ -78,7 +78,7 @@ class CAMERA_CV{
     std::vector<Point2i> positions;
     bool RUN = false;
 private:
-    
+    bool published = false;
     bool start_call = true;
     bool stop_call = false;
     const int ratio = 3;
@@ -126,8 +126,10 @@ void CAMERA_CV::Coordinate_Publisher(int x, int y){
           coordinate.x = x;
           coordinate.y = y;
           coordinate.z = z;
-
-          pub.publish(coordinate);
+	  //if (!published){
+          	pub.publish(coordinate);
+	  //	published = true;
+	  //}
        }else{
          cout << "z value is not valid please try again." << endl;
        }
@@ -248,15 +250,17 @@ int main( int argc, char** argv )
                 for(auto position: cc.positions){
                     // printf("x: %d, y: %d\n", position.x, position.y);
                     cv::circle(cc.src, cv::Point(position.x,position.y), 4, cv::Scalar(157, 99, 83));
-                    if(!cc.mg400_working)
-                        cc.Coordinate_Publisher(position.x, position.y);
-                }   
-            }
+		    //if(!cc.mg400_working)
+                    //    cc.Coordinate_Publisher(position.x, position.y);
+                }  
+		if(!cc.mg400_working && !cc.positions.empty())
+                    cc.Coordinate_Publisher(cc.positions[0].x, cc.positions[0].y);
+      	    }
         setMouseCallback("src", mouseEvent, &cc);
         clock_gettime(CLOCK_MONOTONIC, &stop); fstop=(double)stop.tv_sec + ((double)stop.tv_nsec/1000000000.0);
         std::string fps= "FPS: " + std::to_string(1/(fstop-fstart));
         std::string mode="";
-        std::string cmd_exp="L:start/stop R: xy_calibration M: z_calibration";
+        std::string cmd_exp="L:start/stop";
         if(cc.cmd =="L"){
             if(cc.RUN)
                 mode ="Executing";
@@ -279,9 +283,8 @@ int main( int argc, char** argv )
         imshow( "src", cc.src);
         waitKey(3);
       }
-
-      ros::spinOnce();
       loop_rate.sleep();
+      ros::spinOnce();
    }
   destroyAllWindows();
   return 0;
