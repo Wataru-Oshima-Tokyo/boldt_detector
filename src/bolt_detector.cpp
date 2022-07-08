@@ -118,8 +118,16 @@ void CAMERA_CV::Coordinate_Publisher(int x, int y){
     camera_pkg_msgs::Coordinate coordinate;
     //  Mat* _depth = &depth;
      std::string temp="L";
+     std::vector<double> z_array;
      double z=0.0;
-     z = depth.at<uint16_t>((uint16_t)y,(uint16_t)x);
+     // below process needs to be done because the z-value of realsense is not stable
+     rep(i,0,5)
+        rep(j,0,5){
+          z = cc->depth.at<uint16_t>((uint16_t)(y+j),(uint16_t)(x+i));
+          z_array.push_back(z);
+        }
+      std::sort(z_array.begin(), z_array.end());
+      z = z_array[z_array.size()-1]; //get the median value 
     if(!temp.empty()){
        if(z>0 && z <1200){
           coordinate.t = temp;
